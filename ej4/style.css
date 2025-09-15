@@ -1,0 +1,7 @@
+.user{
+    display: flex;
+    margin: 10px
+}
+li * {
+    margin: 10px
+}

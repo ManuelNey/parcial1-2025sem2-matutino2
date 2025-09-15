@@ -13,11 +13,10 @@
  */
 
 // Importamos los datos desde el archivo JSON usando ES6 import
-import bibliotecaData from './datos_biblioteca.json' assert { type: 'json' };
+import bibliotecaData from './datos_biblioteca.json' with { type: 'json' };
 
 // Creamos una copia de los datos para trabajar con ellos
 const biblioteca = { ...bibliotecaData };
-
 /**
  * FUNCIONES A IMPLEMENTAR:
  */
@@ -34,9 +33,48 @@ const biblioteca = { ...bibliotecaData };
  * @return {boolean|string} - true si se realizó el préstamo, mensaje de error si no
  */
 function prestarLibro(idLibro, idEstudiante, fechaPrestamo) {
-  // Tu código aquí
-}
+    let libroABuscar = null;
+    for (const libroActual of biblioteca.libros) {
+        if (libroActual.id === idLibro) {
+            libroABuscar = libroActual;
+            break; //Corto si lo encuentro
+        }
+    }
+    if (libroABuscar === null || libroABuscar.disponible === false) {
+        console.log("El libro no está o no está disponible ahora ");
+        return false
+    }
 
+    let estudianteElegido = null;
+    for (const estudianteActual of biblioteca.estudiantes) {
+        if (estudianteActual.id === idEstudiante) {
+            estudianteElegido = estudianteActual;
+            break; //Si lo encuentro corto
+        }
+    }
+    if (estudianteElegido === null) {
+        console.log("El estudainte que se mandó no está");
+        return false;
+    }
+    //En esta parte solo se lelga si el libro está
+    libroABuscar.disponible = false; //El libro ya no esta disponible
+
+    //TOmo el formato del json prestamos:[
+    //         { "estudiante": "Ana García", "fechaPrestamo": "2025-08-15", "fechaDevolucion": null }
+    //       ]
+    libroABuscar.prestamos.push({
+        idEstudiante: idEstudiante,
+        fechaPrestamo: fechaPrestamo,
+        fechaDevolucion: null
+    });
+
+    estudianteElegido.librosActuales.push({
+        idLibro: idLibro,
+        fechaPrestamo: fechaPrestamo
+    });
+
+    return true;
+}
 
 /**
  * 2. Función para buscar libros
@@ -48,20 +86,33 @@ function prestarLibro(idLibro, idEstudiante, fechaPrestamo) {
  * @return {array} - Array con los libros que cumplen los criterios
  */
 function buscarLibros(criterios) {
-  // Tu código aquí
-  // Ejemplo de criterios: {titulo: "javascript", disponible: true}
+    const resultados = [];
+    for (const libro of biblioteca.libros) {
+        let cumpleCriterio = true;
+        for (const atributo in criterios) { //Veo si coincido con el algún atributo
+            if (libro[atributo] !== criterios[atributo]) {
+                cumpleCriterio = false; //Si no me sirve lo saco
+                break;
+            }
+        }
+        if (cumpleCriterio) {
+            resultados.push(libro);
+        }
+    }
+    return resultados;
+
 }
 
 
 // ALGUNOS CASOS DE PRUEBA
 // Descomentar para probar tu implementación
 
-/*
+
 console.log("Probando préstamo de libro:");
 console.log(prestarLibro(1, 3, "2025-09-13"));
 
+console.log(prestarLibro(1, 4, "2025-09-13"));
 console.log("\nBuscando libros de programación disponibles:");
 console.log(buscarLibros({categoria: "Programación", disponible: true}));
 
-*/
 

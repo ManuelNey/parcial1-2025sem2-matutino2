@@ -2,17 +2,27 @@
 <html>
   <head>
     <title>Ejercicio 4</title>
+      <script src="script.js" defer></script>
+      <link rel="stylesheet" href="style.css">
   </head>
-  <body>
-    <input name="name" placeholder="Name" required />
-    <input name="email" placeholder="Email" required />
-    <select name="role">
+  <body onload="CargarDatosApi()">
+    <input id="name" name="name" placeholder="Name" required />
+    <input id="email" name="email" placeholder="Email" required />
+    <select id="role" name="role">
       <option>Admin</option>
       <option>Editor</option>
       <option>Viewer</option>
     </select>
     <button id="add">Add</button>
 
-    <ul id="users"></ul>
+    <ul id="users">
+        <li class="user">
+            <p class ="nombre">Pepe</p>
+            <p class="role">admin</p>
+            <p class="email">pepe.gmail.com</p>
+            <button class="promove">Promove</button>
+            <button class="demote">Demote</button>
+        </li>
+    </ul>
   </body>
 </html>
